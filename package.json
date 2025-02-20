@@ -12,9 +12,7 @@
     "prisma": "5.13.0"
   },
   "devDependencies": {
-    "bun-types": "latest",
-    "supertest": "^7.0.0",
-    "vitest": "^3.0.6"
+    "bun-types": "latest"
   },
   "module": "src/index.js"
 }

@@ -63,6 +63,8 @@ export async function getFileById(id: string) {
         // Konversi tipe id menjadi number
         const postId = parseInt(id);
 
+        
+
         //get post by id
         const post = await prisma.file.findMany({
             where: { parent: postId },
@@ -85,5 +87,65 @@ export async function getFileById(id: string) {
         }
     } catch (e: unknown) {
         console.error(`Error finding post: ${e}`);
+    }
+}
+
+export async function updateFile(id: string, options: { filename: string; parent: number | string; typefile: string }) {
+    try {
+
+        // Konversi tipe id menjadi number
+        const postId = parseInt(id);
+         //get filename and typefile
+         const { filename,parent, typefile } = options;
+
+         // Validasi dan konversi parent menjadi number
+         const parentId = typeof parent === 'string' ? Number(parent) : parent;
+
+         // Pastikan parentId valid (bukan NaN)
+         if (isNaN(parentId)) {
+             throw new Error("Parent ID harus berupa angka yang valid.");
+         }
+
+       
+
+        //update post with prisma
+        const post = await prisma.file.update({
+            where: { id: postId },
+            data: {
+                filename: filename,
+                parent: parentId,
+                typefile: typefile,
+            },
+        });
+
+        //return response json
+        return {
+            success: true,
+            message: "Post Updated Successfully!",
+            data: post,
+        }
+    } catch (e: unknown) {
+        console.error(`Error updating post: ${e}`);
+    }
+}
+
+export async function deleteFile(id: string) {
+    try {
+
+        // Konversi tipe id menjadi number
+        const postId = parseInt(id);
+
+        //delete post with prisma
+        await prisma.file.delete({
+            where: { id: postId },
+        });
+
+        //return response json
+        return {
+            success: true,
+            message: "Post Deleted Successfully!",
+        }
+    } catch (e: unknown) {
+        console.error(`Error deleting post: ${e}`);
     }
 }
